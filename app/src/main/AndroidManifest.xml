@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="br.edu.uniritter.mobile.segundprojeto_2021_2">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,6 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SegundProjeto_2021_2">
+        <activity
+            android:name=".ui.DetalheTodoActivity"
+            android:exported="true" />
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true" />
