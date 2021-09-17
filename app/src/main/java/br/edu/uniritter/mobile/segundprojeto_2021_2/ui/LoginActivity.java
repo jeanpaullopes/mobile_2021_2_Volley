@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -33,19 +34,18 @@ import java.util.List;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.R;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.adapters.TodoAdapter;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.model.Todo;
+import br.edu.uniritter.mobile.segundprojeto_2021_2.presenters.TodoPresenter;
+import br.edu.uniritter.mobile.segundprojeto_2021_2.presenters.TodoPresenterContrato;
 
-public class LoginActivity extends AppCompatActivity implements Response.Listener<JSONArray>,
-                                        Response.ErrorListener{
+public class LoginActivity extends AppCompatActivity implements TodoPresenterContrato.view{
 
-    private List<Todo> todos = new ArrayList<>();
+    TodoPresenterContrato.presenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
-
-
+        presenter = new TodoPresenter(this, "https://jsonplaceholder.typicode.com");
         //tratando o botão
         Button btn = findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                buscaJsons();
+                presenter.buscaJsons();
             }
         });
 
@@ -67,75 +67,31 @@ public class LoginActivity extends AppCompatActivity implements Response.Listene
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecyclerView rv = findViewById(R.id.rvTodos);
-                TodoAdapter adapter = new TodoAdapter(todos);
-                LinearLayoutManager llm =  new LinearLayoutManager(getApplicationContext());
-                LinearLayoutManager llm1 =  new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(7,StaggeredGridLayoutManager.HORIZONTAL);
-                rv.setLayoutManager(llm);
-                rv.setAdapter(adapter);
+
             }
         });
 
 
     }
-
-    private void buscaJsons() {
-        //Aqui começa o uso do Volley
-        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-        //https://jsonplaceholder.typicode.com/todos/1
-
-        JsonArrayRequest requisicao = new JsonArrayRequest(Request.Method.GET,
-                "https://jsonplaceholder.typicode.com/todos",null,
-                this,this);
-        queue.add(requisicao);
+    public void preparaRecylerView(RecyclerView.Adapter adapter){
+        RecyclerView rv = findViewById(R.id.rvTodos);
+        LinearLayoutManager llm =  new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager llm1 =  new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(7,StaggeredGridLayoutManager.HORIZONTAL);
+        rv.setLayoutManager(llm);
+        rv.setAdapter(adapter);
     }
 
     @Override
-    public void onResponse(JSONArray response) {
-        //ScrollView sv = findViewById(R.id.scroll);
-        //LinearLayout ll = findViewById(R.id.leiauteVertical);
-        todos.clear();
-
-        try {
-            for (int x = 0; x <30; x++) {
-                for (int i = 0; i < response.length(); i++) {
-                    todos.add(new Todo(response.getJSONObject(i)));
-                }
-            }
-            Button btn = findViewById(R.id.button3);
-            btn.setText("feito!!!!");
-            /*String txt = "";
-                for (Todo td : todos) {
-                    Button btn = new Button(this);
-                    btn.setText("ID " + td.getId());
-                    btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getApplicationContext(), DetalheTodoActivity.class);
-                            intent.putExtra("obj", td);
-                            startActivity(intent);
-                        }
-                    });
-                    ll.addView(btn);
-                }
-        */
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        /*
-        try {
-            ed.setText(response.getString("title"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        */
+    public void limpaRecycler() {
+        RecyclerView rv = findViewById(R.id.rvTodos);
+        rv.setAdapter(null);
     }
 
     @Override
-    public void onErrorResponse(VolleyError error) {
-        //EditText ed = findViewById(R.id.resultado);
-        //ed.setText(error.getMessage());
-
+    public Context getContexto() {
+        return this.getApplicationContext();
     }
+
+
 }
