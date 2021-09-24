@@ -33,7 +33,9 @@ import java.util.List;
 
 import br.edu.uniritter.mobile.segundprojeto_2021_2.R;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.adapters.TodoAdapter;
+import br.edu.uniritter.mobile.segundprojeto_2021_2.model.Personagem;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.model.Todo;
+import br.edu.uniritter.mobile.segundprojeto_2021_2.presenters.JogadorPresenter;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.presenters.TodoPresenter;
 import br.edu.uniritter.mobile.segundprojeto_2021_2.presenters.TodoPresenterContrato;
 
@@ -68,6 +70,18 @@ public class LoginActivity extends AppCompatActivity implements TodoPresenterCon
             @Override
             public void onClick(View view) {
 
+            }
+        });
+
+        btn = findViewById(R.id.button4);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Personagem p = new Personagem("JORGE");
+                p.setClasse("Cruzador");
+                JogadorPresenter.getInstance(p);
+                Intent intent = new Intent(getApplicationContext(), JogadorActivity.class);
+                startActivity(intent);
             }
         });
 
